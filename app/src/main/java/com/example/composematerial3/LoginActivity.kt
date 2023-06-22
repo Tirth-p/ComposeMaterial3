@@ -1,30 +1,40 @@
 package com.example.composematerial3
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.RoundedCorner
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composematerial3.ui.theme.ComposeMaterial3Theme
-import com.google.android.material.color.utilities.MaterialDynamicColors.background
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +43,9 @@ class LoginActivity : ComponentActivity() {
             ComposeMaterial3Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = colorResource(id = R.color.off_white)
+//                    color = MaterialTheme.colorScheme.background
                 ) {
                     LoginScreenUI()
                 }
@@ -45,7 +57,13 @@ class LoginActivity : ComponentActivity() {
 @Composable
 fun LoginScreenUI() {
 
+    var passwordVisible by remember {
+        mutableStateOf(false)
+    }
     var text by remember { mutableStateOf("") }
+    var pass by remember { mutableStateOf("") }
+    var extraEdit by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.padding(28.dp)
@@ -89,12 +107,14 @@ fun LoginScreenUI() {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text("Enter text") },
+                    label = { Text("Enter Name") },
                     trailingIcon = {
                         IconButton(onClick = { /* handle icon click */ }) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_mail),
-                                contentDescription = "Icon"
+                                painter = painterResource(R.drawable.user),
+                                contentDescription = "Icon",
+                                modifier = Modifier
+                                    .size(22.dp)
                             )
                         }
                     }
@@ -106,17 +126,25 @@ fun LoginScreenUI() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = pass,
+                    onValueChange = { pass = it },
                     label = { Text("Enter Password") },
                     trailingIcon = {
-                        IconButton(onClick = { /* handle icon click */ }) {
+                        IconButton(onClick = {
+                            passwordVisible = !passwordVisible
+                        }) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_mail),
-                                contentDescription = "Icon"
+                                painter = painterResource(
+                                    if (passwordVisible) R.drawable.hide else R.drawable.show
+                                ),
+                                contentDescription = if (passwordVisible) "Hide Password" else "Show Password",
+                                modifier = Modifier
+                                    .size(22.dp)
                             )
                         }
-                    }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
             }
 
@@ -139,7 +167,7 @@ fun LoginScreenUI() {
                 )
 
                 val switchState = remember { mutableStateOf(false) }
-                val YellowD = Color(android.graphics.Color.parseColor("#FFD653"))
+                val yellowD = Color(android.graphics.Color.parseColor("#FFD653"))
 
                 Switch(
                     checked = switchState.value,
@@ -152,30 +180,127 @@ fun LoginScreenUI() {
                         uncheckedThumbColor = Color.White,
                         checkedBorderColor = Color.Black,
                         uncheckedBorderColor = Color.White,
-                        checkedTrackColor = YellowD,
+                        checkedTrackColor = yellowD,
                         uncheckedTrackColor = Color.Black,
                         checkedIconColor = MaterialTheme.colorScheme.background
                     )
                 )
             }
             Button(
-                onClick = { /* Handle button click here */ },
+                onClick = {
+                    context.startActivity(
+                        Intent(
+                            context,
+                            FunctionPractice::class.java
+                        ).putExtra("name", text).putExtra("pass", pass)
+                    )
+                },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .background(Color.White),
+                    .background(Color.Transparent),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
             ) {
                 Text(text = "LOG IN")
             }
-            TextFieldWithBackground(modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            R.drawable.text_fill_background,"Enter Text", onTextChange = { newText ->
-                    text = newText
-                })
+            /*   TextFieldWithBackground(modifier = Modifier
+                   .fillMaxWidth()
+                   .height(56.dp),
+                   R.drawable.text_fill_background, "Enter Text", onTextChange = { newText ->
+                       extraEdit = newText
+                   })*/
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .fillMaxWidth(0.45f)
+                        .padding(0.dp, 0.dp, 4.dp, 0.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    colorResource(id = R.color.off_white),
+                                    Color.White
+                                )
+                            )
+                        )
+                ) {
+                    Divider(color = Color.Transparent, thickness = 0.dp)
+                }
+                Text(text = "OR")
+                Box(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .padding(4.dp, 0.dp, 0.dp, 0.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color.White,
+                                    colorResource(id = R.color.off_white)
+                                )
+                            )
+                        )
+                ) {
+                    Divider(color = Color.Transparent, thickness = 0.dp)
+                }
+            }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 15.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                SquareButtonWithImage(imageResId = R.drawable.icon_google,
+                    onClick = {
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                    }
+                )
+                SquareButtonWithImage(imageResId = R.drawable.icon_facebook,
+                    onClick = {
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                    }
+                )
+                SquareButtonWithImage(imageResId = R.drawable.icon_instagram,
+                    onClick = {
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                    }
+                )
+                SquareButtonWithImage(imageResId = R.drawable.icon_twitter,
+                    onClick = {
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                    }
+                )
+                SquareButtonWithImage(imageResId = R.drawable.icon_apple,
+                    onClick = {
+                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                    }
+                )
+
+            }
         }
+    }
+}
+
+@Composable
+fun SquareButtonWithImage(
+    imageResId: Int,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(64.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick)
+            .border(width = 2.dp, color = Color.White)
+            .background(colorResource(id = R.color.off_white))
+            .padding(4.dp),
+    ) {
+        Image(
+            painter = painterResource(id = imageResId),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
