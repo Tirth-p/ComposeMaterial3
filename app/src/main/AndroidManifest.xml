@@ -16,7 +16,7 @@
             android:name=".GoogleActivity"
             android:exported="false"
             android:label="@string/title_activity_google"
-            android:theme="@style/Theme.ComposeMaterial3" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".FunctionPractice"
             android:exported="false"

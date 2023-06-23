@@ -252,27 +252,52 @@ fun LoginScreenUI() {
             ) {
                 SquareButtonWithImage(imageResId = R.drawable.icon_google,
                     onClick = {
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                        context.startActivity(
+                            Intent(
+                                context,
+                                GoogleActivity::class.java
+                            ).putExtra("name", "Google")
+                        )
                     }
                 )
                 SquareButtonWithImage(imageResId = R.drawable.icon_facebook,
                     onClick = {
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                        context.startActivity(
+                            Intent(
+                                context,
+                                GoogleActivity::class.java
+                            ).putExtra("name", "Facebook")
+                        )
                     }
                 )
                 SquareButtonWithImage(imageResId = R.drawable.icon_instagram,
                     onClick = {
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                        context.startActivity(
+                            Intent(
+                                context,
+                                GoogleActivity::class.java
+                            ).putExtra("name", "Instagram")
+                        )
                     }
                 )
                 SquareButtonWithImage(imageResId = R.drawable.icon_twitter,
                     onClick = {
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                        context.startActivity(
+                            Intent(
+                                context,
+                                GoogleActivity::class.java
+                            ).putExtra("name", "Twitter")
+                        )
                     }
                 )
                 SquareButtonWithImage(imageResId = R.drawable.icon_apple,
                     onClick = {
-                        Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                        context.startActivity(
+                            Intent(
+                                context,
+                                GoogleActivity::class.java
+                            ).putExtra("name", "Apple")
+                        )
                     }
                 )
 
